@@ -1,5 +1,5 @@
 # Unicorn Tracker - Frontend
-This is the frontend for the [Unicorn Tracker API](emilyaviva/unicorn-tracker-api).
+This is the frontend for the [Unicorn Tracker API](https://github.com/emilyaviva/unicorn-tracker-api).
 
 ## Instructions
 Run with `yarn start` (to run in hot-reloading development mode) while running the API server on port 3001 in another terminal.
