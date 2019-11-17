@@ -1,18 +1,26 @@
 import React from 'react'
 import './unicorn-row.css'
 
+import API from '../lib/API'
+
 class UnicornRow extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
       editMode: false,
-      location: this.props.location
+      initialName: this.props.name,
+      initialColor: this.props.color,
+      initialFood: this.props.food,
+      initialLocation: this.props.location,
+      editedName: '',
+      editedColor: '',
+      editedFood: '',
+      editedLocation: ''
     }
 
     this.handleChange = this.handleChange.bind(this)
-    this.handleEdit = this.handleEdit.bind(this)
-    this.handleCancel = this.handleCancel.bind(this)
+    this.handleEditToggle = this.handleEditToggle.bind(this)
     this.handleSave = this.handleSave.bind(this)
   }
 
@@ -21,52 +29,85 @@ class UnicornRow extends React.Component {
     const value = target.value
     const name = target.name
     this.setState({
-      [name]: value
+      [`edited${name.charAt(0).toUpperCase() + name.slice(1)}`]: value
     })
   }
 
-  handleEdit () {
+  handleEditToggle () {
+    // Always blank edited values
     this.setState({
-      editMode: true
+      editedName: '',
+      editedColor: '',
+      editedFood: '',
+      editedLocation: '',
+      editMode: !this.state.editMode
     })
   }
 
-  handleCancel () {
-    this.setState({
-      editMode: false
-    })
-  }
-
-  handleSave () {
-    this.setState({
-      editMode: false
-    })
+  async handleSave () {
+    const {
+      initialName,
+      initialColor,
+      initialFood,
+      initialLocation,
+      editedName,
+      editedColor,
+      editedFood,
+      editedLocation
+    } = this.state
+    const newAttributes = {
+      name: editedName || initialName,
+      color: editedColor || initialColor,
+      food: editedFood || initialFood,
+      location: editedLocation || initialLocation
+    }
+    try {
+      const res = await API.put(`/unicorns/${this.props.unicornId}`, newAttributes)
+      if (res.status === 204) {
+        this.setState({
+          initialName: newAttributes.name,
+          initialColor: newAttributes.color,
+          initialFood: newAttributes.food,
+          initialLocation: newAttributes.location
+        })
+        this.handleEditToggle()
+      } else {
+        throw new Error('Did not receive the appropriate API response for updating an item')
+      }
+    } catch (e) {
+      console.error(`Failed API request: ${e}`)
+    }
   }
 
   render () {
-    const { name, color, food } = this.props
-    const { location, editMode } = this.state
+    const {
+      initialName,
+      initialColor,
+      initialFood,
+      initialLocation,
+      editMode
+    } = this.state
 
     if (!editMode) {
       return (
         <tr>
-          <td>{name}</td>
-          <td>{color}</td>
-          <td>{food}</td>
-          <td>{location}</td>
+          <td>{initialName}</td>
+          <td>{initialColor}</td>
+          <td>{initialFood}</td>
+          <td>{initialLocation}</td>
           <td>
-            <button onClick={this.handleEdit}>Edit</button>
+            <button onClick={this.handleEditToggle}>Edit</button>
           </td>
         </tr>
       )
     } else {
       return (
         <tr>
-          <td><input type='text' value={name} /></td>
-          <td><input type='text' value={color} /></td>
-          <td><input type='text' value={food} /></td>
+          <td><input name='name' type='text' defaultValue={initialName} onChange={this.handleChange} /></td>
+          <td><input name='color' type='text' defaultValue={initialColor} onChange={this.handleChange} /></td>
+          <td><input name='food' type='text' defaultValue={initialFood} onChange={this.handleChange} /></td>
           <td>
-            <select value={location} onChange={this.handleChange}>
+            <select name='location' defaultValue={initialLocation} onChange={this.handleChange}>
               <option value='Barn'>Barn</option>
               <option value='Trails'>Trails</option>
               <option value='Pasture'>Pasture</option>
@@ -75,7 +116,7 @@ class UnicornRow extends React.Component {
           </td>
           <td>
             <button onClick={this.handleSave}>Save</button>
-            <button onClick={this.handleCancel}>Cancel</button>
+            <button onClick={this.handleEditToggle}>Cancel</button>
           </td>
         </tr>
       )

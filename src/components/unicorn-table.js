@@ -22,6 +22,7 @@ const UnicornTable = ({ unicorns, loading }) => {
           {unicorns.map(unicorn => (
             <UnicornRow
               key={unicorn.name}
+              unicornId={unicorn.id}
               name={unicorn.name}
               color={unicorn.color}
               food={unicorn.food}
