@@ -12,10 +12,10 @@ const UnicornTable = ({ unicorns, loading }) => {
       <table>
         <thead>
           <tr>
-            <td>Unicorn Name</td>
-            <td>Favorite Color</td>
-            <td>Favorite Food</td>
-            <td>Location</td>
+            <th>Unicorn Name</th>
+            <th>Favorite Color</th>
+            <th>Favorite Food</th>
+            <th>Location</th>
           </tr>
         </thead>
         <tbody>

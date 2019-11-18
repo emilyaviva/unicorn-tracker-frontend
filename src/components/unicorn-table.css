@@ -1,0 +1,12 @@
+.UnicornTable {
+  text-align: center;
+}
+
+.UnicornTable thead th {
+  padding-bottom: 0.5rem;
+}
+
+.UnicornTable th,
+.UnicornTable td {
+  min-width: 8rem;
+}

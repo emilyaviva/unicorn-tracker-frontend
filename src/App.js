@@ -31,6 +31,7 @@ class App extends React.Component {
     const { loading, unicorns } = this.state
     return (
       <div className='App'>
+        <h1>Emily's Unicorn Ranch</h1>
         <UnicornTable loading={loading} unicorns={unicorns} />
       </div>
     )
